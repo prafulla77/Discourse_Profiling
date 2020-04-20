@@ -7,7 +7,7 @@ If you use the dataset or model in your work, please cite the following.
 @inproceedings{choubey2020discourse,
   title={Discourse as a Function of Event: Profiling Discourse Structure in News Articles around the Main Event},
   author={Choubey, Prafulla Kumar and Lee, Aaron and Huang, Ruihong and Wang, Lu},
-  booktitle={ACL},
+  booktitle={Proceedings of the 58th Annual Meeting of the Association for Computational Linguistics (Volume 1: Long Papers)},
   year={2020}
 }
 ```
