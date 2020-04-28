@@ -1,3 +1,3 @@
 ---
-#### Please report any error in the dataset such as missing annotations.
+#### Please report any errors in the dataset, such as missing annotations.
 ---
