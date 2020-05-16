@@ -68,23 +68,46 @@ def process_doc(fname, domain):
             else:
                 # print(temp)
                 sent_to_event[temp[2]] = label
-                if label != prev_label and label in ['Distant_Anecdotal', 'Main']:
-                    sent_to_topic[temp[2]] = 1
-                elif label != prev_label and prev_label in ['Distant_Anecdotal']:
-                    sent_to_topic[temp[2]] = 1
-                elif "Distant" in prev_label and "Cause" in label:
-                    sent_to_topic[temp[2]] = 1
-                elif prev_label == "headline" or (label == "Main_Consequence" and "Main" not in prev_label):
-                    sent_to_topic[temp[2]] = 1
-                else:
-                    sent_to_topic[temp[2]] = 0
-                prev_label = label
+                sent_to_topic[temp[2]] = 0
+                #################################################################
+                ################ Can't use this, not always sorted ##############
+                #################################################################
+                # if label != prev_label and label in ['Main']:  # 'Distant_Anecdotal',
+                #     sent_to_topic[temp[2]] = 1
+                # # elif label != prev_label and prev_label in ['Distant_Anecdotal']:
+                # #     sent_to_topic[temp[2]] = 1
+                # # elif prev_label not in ['Distant_Expectations_Consequences', 'Distant_Evaluation'] and label in ['Distant_Expectations_Consequences', 'Distant_Evaluation']:
+                # #     sent_to_topic[temp[2]] = 1
+                # # elif label != prev_label and prev_label in ['Cause_Specific']:
+                # #     sent_to_topic[temp[2]] = 1
+                # elif prev_label == "headline" or (label == "Main_Consequence" and "Main" not in prev_label):
+                #     sent_to_topic[temp[2]] = 1
+                # elif "Distant" in prev_label and 'Cause' in label:
+                #     sent_to_topic[temp[2]] = 1
+                # else:
+                #     sent_to_topic[temp[2]] = 0
+                # prev_label = label
 
     doc.sent_to_event = sent_to_event
     doc.sent_to_speech = sent_to_speech
     doc.sids = sort_order(sids)
-    # split_sen = len(sids)//2
-    # assert len(sent_to_topic) == len(doc.sids)
+    first_sentence = True
+    for ind in range(len(doc.sids)-1):
+        # print(doc.sids[ind], sent_to_event[doc.sids[ind]])
+        if first_sentence and sent_to_event[doc.sids[ind]] != 'NA':  # First sentence always transition
+            first_sentence = False
+            sent_to_topic[doc.sids[ind]] = 1
+        if sent_to_event[doc.sids[ind]] not in ['Main', 'Main_Consequence'] and 'Main' in sent_to_event[doc.sids[ind+1]]:  # 'Distant_Anecdotal',
+            sent_to_topic[doc.sids[ind+1]] = 1
+        elif "Distant" in sent_to_event[doc.sids[ind]] and 'Cause' in sent_to_event[doc.sids[ind+1]]:
+            sent_to_topic[doc.sids[ind+1]] = 1
+        elif sent_to_event[doc.sids[ind+1]] != sent_to_event[doc.sids[ind]] and sent_to_event[doc.sids[ind+1]] == 'Distant_Anecdotal':
+            sent_to_topic[doc.sids[ind+1]] = 1
+        elif sent_to_event[doc.sids[ind+1]] != sent_to_event[doc.sids[ind]] and sent_to_event[doc.sids[ind]] == 'Distant_Anecdotal':
+            sent_to_topic[doc.sids[ind]] = 1
+    # print(sent_to_topic)
+    # print(sent_to_event)
+    assert(len(sent_to_event) == len(doc.sids))
     doc.sent_to_topic = sent_to_topic
 
     return doc
