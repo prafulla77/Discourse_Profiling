@@ -18,7 +18,6 @@ class Document(object):
         self.tags = dict()
         self.sent_to_speech = None
         self.sent_to_event = None
-        self.sent_to_topic = None
         self.sids = []
 
 
